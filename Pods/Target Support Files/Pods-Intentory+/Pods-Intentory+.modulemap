@@ -1,0 +1,6 @@
+framework module Pods_Intentory_ {
+  umbrella header "Pods-Intentory+-umbrella.h"
+
+  export *
+  module * { export * }
+}
