@@ -31,16 +31,13 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         super.viewDidLoad()
         setupView()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-    }
+   
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
     }
     
+    // Checks if user is authenticated, if not redirect to register view controller
     override func viewDidAppear(_ animated: Bool) {
         if Auth.auth().currentUser == nil {
             let vc = RegisterViewController()
@@ -53,6 +50,7 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         self.navigationItem.setHidesBackButton(true, animated: false)
     }
     
+    // Loads the inventory items from Firebase Database.
     func loadItems() {
         guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
         let dbRef = Database.database().reference()
@@ -60,19 +58,25 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         dbRef.child("inventories").child(uid).observe(.value) { (snapshot) in
             self.items.removeAll()
             guard let value = snapshot.value as? [String:Any] else { return }
+            
+            // Looping over all items that were received from our call
             for key in value.keys {
+                // Error
                 guard let itemJSON = value[key] as? [String : Any] else {
                     self.showMessage(with: "Error", message: "There was an error with the response.")
                     return
                 }
                 
+                // Making sure all the required parameters were received
                 guard let name = itemJSON["name"] as? String, let price = itemJSON["price"] as? Double, let quantity = itemJSON["quantity"] as? Double else {
                     self.showMessage(with: "Error", message: "Some required fields were left blank. Cannot retrieve them.")
                     return
                 }
                 
+                // Creating the item
                 let item = InventoryItem(id: key, name: name, price: price, quantity: quantity)
                 
+                //Adding optional parameters if they exist
                 if let date_purchased = itemJSON["date_purchased"] as? Double {
                     item.date_purchased = date_purchased
                 }
@@ -89,9 +93,11 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
                     item.notes = notes
                 }
                 
+                // Appending the item to the list of items
                 self.items.append(item)
             }
             
+            // Refreshing the tableview to show changes
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -129,7 +135,8 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: itemReuseIdentifier, for: indexPath) as! ItemTableViewCell
             cell.item = items[indexPath.row]
-            cell.seeMoreButton.addTarget(self, action: #selector(handleSeeMore), for: .touchUpInside)
+            cell.seeMoreButton.tag = indexPath.row
+            cell.seeMoreButton.addTarget(self, action: #selector(handleSeeMore(sender:)), for: .touchUpInside)
             return cell
         }
     }
@@ -141,19 +148,44 @@ class ItemsViewController: UIViewController, UITableViewDelegate, UITableViewDat
     }
     
     
-    @objc func handleSeeMore() {
-        let actionSheet = UIAlertController(title: "Item Title", message: "6 in stock", preferredStyle: .actionSheet)
+    @objc func handleSeeMore(sender: UIButton) {
+        let item = items[sender.tag]
+        let actionSheet = UIAlertController(title: item.name, message: "\(item.quantity) in stock", preferredStyle: .actionSheet)
         
         // Cancel
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         actionSheet.addAction(cancelAction)
         
         // Delete
-        let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: nil)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { (_) in
+            let row = sender.tag
+            let item = self.items[row]
+            guard let id = item.id, let uid = UserDefaults.standard.value(forKey: "uid") as? String else {
+                print("error while retrieving ID of item")
+                return
+            }
+            
+            let dbRef = Database.database().reference()
+            dbRef.child("inventories").child(uid).child(id).removeValue()
+            self.items.remove(at: sender.tag)
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+            
+        })
         actionSheet.addAction(deleteAction)
         
         // Edit
-        let editAction = UIAlertAction(title: "Edit Item", style: .default, handler: nil)
+        let editAction = UIAlertAction(title: "Edit Item", style: .default, handler: { (_) in
+            let row = sender.tag
+            let item = self.items[row]
+            let vc = EditItemFormViewController()
+            vc.item = item
+            let navVC = UINavigationController(rootViewController: vc)
+            self.present(navVC, animated: true, completion: nil)
+            
+        })
         actionSheet.addAction(editAction)
         
         self.present(actionSheet, animated: true, completion: nil)

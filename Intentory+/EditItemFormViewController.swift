@@ -32,16 +32,18 @@ class EditItemFormViewController : FormViewController {
             self.showMessage(with: "Error", message: "No item was passed to edit.")
             return
         }
-        
+        // Building the form using Eureka
         form +++ Section("General Information")
             <<< TextRow(){ row in
                 row.title = "Name"
                 row.value = item.name
                 row.tag = "name"
+                //This notifies Eureka that this row is required, you will see it in a couple of more rows
                 row.add(rule: RuleRequired())
                 row.validationOptions = .validatesOnChangeAfterBlurred
             }
             .cellUpdate({ (cell, row) in
+                // If validation fails, change text color to red
                 if !row.isValid {
                     cell.titleLabel?.textColor = .systemRed
                 }
@@ -100,6 +102,7 @@ class EditItemFormViewController : FormViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    // Store item in Database (same method as EditItemFormViewController.handleUpdate())
     @objc func handleUpdate() {
         guard let itemID = item?.id else {
             self.showMessage(with: "Error", message: "Item did not load successfully from DB.")

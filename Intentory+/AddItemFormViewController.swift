@@ -26,7 +26,7 @@ class AddItemFormViewController : FormViewController {
     }
     
     private func setupForm() {
-        form +++ Section("General Information")
+        form +++ Section("Required Information")
             <<< TextRow(){ row in
                 row.title = "Name"
                 row.placeholder = "Item name"
@@ -93,15 +93,20 @@ class AddItemFormViewController : FormViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
+    // Handles any updates the item has
     @objc func handleUpdate() {
         print("Saving item to DB...")
+        
+        // Validates the form
         let errors = form.validate() as [ValidationError]
         if errors.count > 0 {
             self.showMessage(with: "Error", message: "There are required fields that you have left blank. Please make sure to fill all required fields.")
             return
         }
         
+        // Get values from form
         let values = form.values()
+        // parse name parameter etc...
         guard let name = values["name"] as? String else {
             self.showMessage(with: "Hmm...", message: "The name field seems to be left blank. Please make sure to add a name to your item.")
             return
@@ -118,8 +123,10 @@ class AddItemFormViewController : FormViewController {
         }
         
         
+        // Create the item
         let inventoryItem = InventoryItem(id: nil, name: name, price: price, quantity: quantity)
         
+        // Load it's image
         if let image = values["image"] as? UIImage {
             guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
             
@@ -128,6 +135,7 @@ class AddItemFormViewController : FormViewController {
             let storageRef = Storage.storage().reference().child("images").child(uid).child(uuid)
             inventoryItem.picture = uuid
             DispatchQueue.main.async {
+                // Upload image to Firebase Storage
                 let uploadTask = storageRef.putData(imageData, metadata: nil) { (metadata, error) in
                     guard let _ = metadata else {
                         self.showMessage(with: "Error", message: "An error occured while fetching the metadata. Please try again.")
@@ -156,6 +164,7 @@ class AddItemFormViewController : FormViewController {
             inventoryItem.notes = notes
         }
         
+        // Converting InventoryItem to json to send to DB
         let jsonEncoder = JSONEncoder()
         do {
             guard let uid = UserDefaults.standard.value(forKey: "uid") as? String else { return }
@@ -164,11 +173,13 @@ class AddItemFormViewController : FormViewController {
             let dictionary = convertToDictionary(text: json)
             let dbRef = Database.database().reference()
             dbRef.child("inventories").child(uid).childByAutoId().setValue(dictionary) { (error, _) in
+                //Error updating item
                 if let error = error {
                     self.showMessage(with: "Error", message: error.localizedDescription)
                     return
                 }
                 
+                // Dismiss the item edit view
                 self.dismiss(animated: true, completion: nil)
             }
         } catch {

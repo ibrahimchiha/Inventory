@@ -15,8 +15,8 @@
 		055405602560358B00EB595C /* AddItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0554055F2560358B00EB595C /* AddItemTableViewCell.swift */; };
 		0554056325603BF800EB595C /* ItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0554056225603BF800EB595C /* ItemTableViewCell.swift */; };
 		0554056B256044EB00EB595C /* AddItemFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0554056A256044EB00EB595C /* AddItemFormViewController.swift */; };
+		05685BB1258D43DE00C65E6A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 05685BB0258D43DE00C65E6A /* GoogleService-Info.plist */; };
 		058FD70925865A81007D27E4 /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FD70825865A81007D27E4 /* RegisterViewController.swift */; };
-		058FD70C25866027007D27E4 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 058FD70B25866027007D27E4 /* GoogleService-Info.plist */; };
 		058FD73725866351007D27E4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FD73625866351007D27E4 /* Extensions.swift */; };
 		058FD79125869207007D27E4 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FD79025869207007D27E4 /* Item.swift */; };
 		058FD7DC2586E034007D27E4 /* EditItemFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 058FD7DB2586E034007D27E4 /* EditItemFormViewController.swift */; };
@@ -34,8 +34,8 @@
 		0554055F2560358B00EB595C /* AddItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemTableViewCell.swift; sourceTree = "<group>"; };
 		0554056225603BF800EB595C /* ItemTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemTableViewCell.swift; sourceTree = "<group>"; };
 		0554056A256044EB00EB595C /* AddItemFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddItemFormViewController.swift; sourceTree = "<group>"; };
+		05685BB0258D43DE00C65E6A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		058FD70825865A81007D27E4 /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
-		058FD70B25866027007D27E4 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		058FD73625866351007D27E4 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		058FD79025869207007D27E4 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		058FD7DB2586E034007D27E4 /* EditItemFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditItemFormViewController.swift; sourceTree = "<group>"; };
@@ -89,8 +89,8 @@
 				058FD73625866351007D27E4 /* Extensions.swift */,
 				055405502560342C00EB595C /* Assets.xcassets */,
 				055405522560342C00EB595C /* LaunchScreen.storyboard */,
+				05685BB0258D43DE00C65E6A /* GoogleService-Info.plist */,
 				055405552560342C00EB595C /* Info.plist */,
-				058FD70B25866027007D27E4 /* GoogleService-Info.plist */,
 			);
 			path = "Intentory+";
 			sourceTree = "<group>";
@@ -173,7 +173,7 @@
 			files = (
 				055405542560342C00EB595C /* LaunchScreen.storyboard in Resources */,
 				055405512560342C00EB595C /* Assets.xcassets in Resources */,
-				058FD70C25866027007D27E4 /* GoogleService-Info.plist in Resources */,
+				05685BB1258D43DE00C65E6A /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -382,7 +382,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ibrahimchiha.Intentory-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibrahimchiha.Inventory;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -402,7 +402,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.ibrahimchiha.Intentory-";
+				PRODUCT_BUNDLE_IDENTIFIER = com.ibrahimchiha.Inventory;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

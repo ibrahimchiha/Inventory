@@ -129,18 +129,24 @@ class RegisterViewController : UIViewController {
         switchAuthButton.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     
+    // This function is called when the user presses the register button
     @objc func handleRegister() {
+        
+        // Parsing email and password from TextFields
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             self.showMessage(with: "Error", message: "An error occurred while retrieving your email address.")
             return
         }
         
+        // Firebase Auth function to create user
         Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
             if error != nil {
                 if let errCode = AuthErrorCode(rawValue: error!._code) {
+                    // Received an error
                     switch errCode {
                     case .emailAlreadyInUse:
                         print("Email already in use, attempting to login.")
+                        // If user is already signed up, log him in
                         self.handleLogin()
                     default:
                         guard let error = error else { return }
@@ -158,15 +164,17 @@ class RegisterViewController : UIViewController {
             let userEmail = result.user.email
             let uid = result.user.uid
             
+            // Storing the users credentials
             UserDefaults.standard.setValue(userEmail, forKey: "email")
             UserDefaults.standard.setValue(uid, forKey: "uid")
             
+            // Call to function to store user in Firebase Database
             self.saveInDatabase(with: email, uid: uid)
         }
         
     }
     
-    
+    // This function saves a user's email and uid to the Database, in order to retreive them if needed
     func saveInDatabase(with email: String, uid: String) {
         let dbRef = Database.database().reference()
         dbRef.child("users").child(uid).setValue(["email": email]) { (error, _) in
@@ -180,12 +188,16 @@ class RegisterViewController : UIViewController {
     }
     
     
+    // In case the user is already signed up, this function will log in the user using Firebase Auth
     func handleLogin() {
+        // Making sure email and password are parsed correctly
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             self.showMessage(with: "Error", message: "An error occurred while retrieving your email address.")
             return
         }
         
+        
+        // Sign the user in using the helper function
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
             guard let self = self else { return }
             if let error = error {
@@ -199,8 +211,12 @@ class RegisterViewController : UIViewController {
             }
             
             // Login Success
+            // Store the user's email locally
+            // No need to save in DB since this is not the register call
             let userEmail = result.user.email
+            let userUID = result.user.uid
             UserDefaults.standard.setValue(userEmail, forKey: "email")
+            UserDefaults.standard.setValue(userUID, forKey: "uid")
             
             self.dismiss(animated: true, completion: nil)
             

@@ -33,6 +33,7 @@ class AddItemTableViewCell: UITableViewCell {
         return button
     }()
   
+    // Sets constraint for the button
     private func setupView() {
         selectionStyle = .none
         addSubview(createNewButton)

@@ -10,12 +10,15 @@ import FirebaseAuth
 
 extension UIViewController {
     
+    // This method presents the user with a popup AlertController
+    // Takes title and message as parameters
     func showMessage(with title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
     
+    //Handle the log out of the user from Firebase and present login view
     @objc func handleLogout() {
         do {
             try Auth.auth().signOut()
@@ -31,7 +34,7 @@ extension UIViewController {
             return
         }
     }
-    
+    // Converts a JSON string to Dictionary (I dont think we used this but I was using it in earlier versions)
     func convertToDictionary(text: String) -> [String: Any]? {
         if let data = text.data(using: .utf8) {
             do {

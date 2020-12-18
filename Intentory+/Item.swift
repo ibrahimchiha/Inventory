@@ -8,6 +8,7 @@
 import Foundation
 
 
+// Inventory Item class, extends Codable to allow for JSON conversion easily
 class InventoryItem : Codable {
     
     var id: String?

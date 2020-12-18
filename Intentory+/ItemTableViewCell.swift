@@ -97,6 +97,7 @@ class ItemTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // Sets constraint for the cell view
     private func setupView() {
         addSubview(itemImageView)
         itemImageView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
